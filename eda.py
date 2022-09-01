@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 import numpy as np
 
 # read csv
@@ -52,6 +53,16 @@ print(p_type)
 print(7 * '--------')
 
 # count how many performance types per month
-df['date'] = df['e_EventDate'].apply(lambda x: pd.to_datetime(int(x), errors='coerce', format='%Y%m%d'))
-print(df['date'].to_list()[:20])
-print(type(df['e_EventDate'].to_list()[0]))
+# df['date'] = df['e_EventDate'].apply(lambda x: pd.to_datetime(str(x), errors='coerce', format='%Y%m%d'))
+
+df['date'] = df['e_EventDate'].apply(lambda x: datetime.datetime.strptime(str(x), '%Y%m%d').strftime('%Y-%m-%d'))
+
+# print(df['date'].to_list()[:20])
+# print(df['e_EventDate'].to_list()[0])
+
+
+# keep rows where 'c_Performer' is not NaN
+df = df[df['e_EventDate'].notna()]
+print('Length after dropping NaN:', len(df['c_Performer']))
+print(7 * '--------')
+
