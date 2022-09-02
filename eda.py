@@ -54,15 +54,25 @@ print(7 * '--------')
 
 # count how many performance types per month
 # df['date'] = df['e_EventDate'].apply(lambda x: pd.to_datetime(str(x), errors='coerce', format='%Y%m%d'))
-
-df['date'] = df['e_EventDate'].apply(lambda x: datetime.datetime.strptime(str(x), '%Y%m%d').strftime('%Y-%m-%d'))
-
-# print(df['date'].to_list()[:20])
-# print(df['e_EventDate'].to_list()[0])
-
-
-# keep rows where 'c_Performer' is not NaN
+df['e_EventDate'] = df['e_EventDate'].astype(str)
 df = df[df['e_EventDate'].notna()]
-print('Length after dropping NaN:', len(df['c_Performer']))
-print(7 * '--------')
+
+year_df = []
+month_df = []
+day_df = []
+for i in df['e_EventDate']:
+    splitat = 4
+    year, rest = i[:splitat], i[splitat:]
+    month, day = rest[:splitat - 2], rest[splitat - 2:]
+
+    year_df.append(year)
+    month_df.append(month)
+    day_df.append(day)
+
+# turn list elements into integers
+year_df, month_df, day_df = [int(x) for x in year_df], [int(x) for x in month_df], [int(x) for x in day_df]
+
+# add years to df
+df['e_Year'] = year_df
+
 
