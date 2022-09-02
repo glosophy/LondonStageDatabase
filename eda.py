@@ -43,6 +43,7 @@ df['c_Performer'] = [i.split(',') for i in df['c_Performer']]
 # # deconstruct list so occurrences are accurate
 df = df.explode('c_Performer')
 performers_clean = df['c_Performer'].value_counts()
+performers_clean_names = df['c_Performer'].value_counts().index.tolist()
 print(performers_clean)
 print('Length with explode:', len(df['c_Performer']))
 print(7 * '--------')
@@ -52,8 +53,7 @@ p_type = df['p_PType'].value_counts()
 print(p_type)
 print(7 * '--------')
 
-# count how many performance types per month
-# df['date'] = df['e_EventDate'].apply(lambda x: pd.to_datetime(str(x), errors='coerce', format='%Y%m%d'))
+# handle dates
 df['e_EventDate'] = df['e_EventDate'].astype(str)
 df = df[df['e_EventDate'].notna()]
 
@@ -75,4 +75,19 @@ year_df, month_df, day_df = [int(x) for x in year_df], [int(x) for x in month_df
 # add years to df
 df['e_Year'] = year_df
 
+# filter by top 10 plays
+play_clean = df['p_PerfTitleClean'].value_counts()
+play_clean_names = df['p_PerfTitleClean'].value_counts().index.tolist()
+play_clean_names_top10 = play_clean_names[:10]
+print(play_clean)
+print(7 * '--------')
+print('Top 10 plays:')
+print(play_clean_names_top10)
+print(7 * '--------')
 
+# filter by the top 10 plays: keep rows based on conditions
+top10_df = df[df['p_PerfTitleClean'].isin(play_clean_names_top10)]
+top10 = df[df['c_Performer'].isin(performers_clean_names[:10])]
+print(top10)
+
+# top10.to_csv('top10.csv', index=False)
