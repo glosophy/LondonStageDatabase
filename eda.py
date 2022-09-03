@@ -78,6 +78,6 @@ df['e_Year'] = year_df
 # filter by top 10 plays
 df_unique = df.groupby('p_PerfTitleClean')['e_EventId'].nunique()
 df_unique = df_unique.reset_index()
-df_unique = df_unique.sort_values(by=['e_EventId'])
+df_unique = df_unique.sort_values(by=['e_EventId'], ascending=False)
 
 df_unique.to_csv('unique_plays.csv', index=False)
