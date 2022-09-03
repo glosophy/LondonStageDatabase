@@ -76,18 +76,8 @@ year_df, month_df, day_df = [int(x) for x in year_df], [int(x) for x in month_df
 df['e_Year'] = year_df
 
 # filter by top 10 plays
-play_clean = df['p_PerfTitleClean'].value_counts()
-play_clean_names = df['p_PerfTitleClean'].value_counts().index.tolist()
-play_clean_names_top10 = play_clean_names[:10]
-print(play_clean)
-print(7 * '--------')
-print('Top 10 plays:')
-print(play_clean_names_top10)
-print(7 * '--------')
+df_unique = df.groupby('p_PerfTitleClean')['e_EventId'].nunique()
+df_unique = df_unique.reset_index()
+df_unique = df_unique.sort_values(by=['e_EventId'])
 
-# filter by the top 10 plays: keep rows based on conditions
-top10_df = df[df['p_PerfTitleClean'].isin(play_clean_names_top10)]
-top10 = df[df['c_Performer'].isin(performers_clean_names[:10])]
-print(top10)
-
-# top10.to_csv('top10.csv', index=False)
+df_unique.to_csv('unique_plays.csv', index=False)
