@@ -75,9 +75,22 @@ year_df, month_df, day_df = [int(x) for x in year_df], [int(x) for x in month_df
 # add years to df
 df['e_Year'] = year_df
 
+# replace Hamlet occurrences
+hamlet = []
+for i in df['p_PerfTitleClean']:
+    if 'Hamlet' in i:
+        hamlet.append(i)
+
+
+df['p_PerfTitleClean'] = df['p_PerfTitleClean'].replace(regex=hamlet[1:], value=hamlet[0], inplace=True)
+
 # filter by top 10 plays
 df_unique = df.groupby('p_PerfTitleClean')['e_EventId'].nunique()
+
 df_unique = df_unique.reset_index()
 df_unique = df_unique.sort_values(by=['e_EventId'], ascending=False)
+print(df_unique)
+print(7 * '--------')
+
 
 df_unique.to_csv('unique_plays.csv', index=False)
