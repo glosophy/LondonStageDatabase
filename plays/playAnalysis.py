@@ -4,7 +4,7 @@ top = pd.read_csv('/Users/guillermina/Pycharm/LondonStageDatabase/top_5.csv')
 
 # filter by plays
 plays = top['p_PerfTitleClean'].unique()
-print(plays, '\n', 7*'---------')
+print(plays, '\n', 7 * '---------')
 
 # get individual dataframes for each play
 hamlet = top[top['p_PerfTitleClean'] == plays[0]]
@@ -15,23 +15,21 @@ devil = top[top['p_PerfTitleClean'] == plays[4]]
 
 dfs = [hamlet, macbeth, stratagem, beggars, devil]
 
+plays_timeline = []
 # get timeline for number of plays over time
 for i in range(len(dfs)):
     time = dfs[i].groupby('e_Year')['e_EventId'].nunique()
     time = time.reset_index()
     time.to_csv('{}_overTime.csv'.format(str(plays[i]).replace(' ', '')), index=False)
+    plays_timeline.append(time)
 
+play_columns = top.columns
+print(play_columns, '\n', 7 * '---------')
 
-# get performers count for alluvial diagram
-# filter by top 5 plays
-top_performer = top.groupby('p_PerfTitleClean')['e_EventId'].nunique()
-
-df_unique = df_unique.reset_index()
-df_unique = df_unique.sort_values(by=['e_EventId'], ascending=False)
-print(df_unique)
-print(7 * '--------')
-
-top_5 = df_unique['p_PerfTitleClean'][:5].to_list()
-print('Top 5 plays:')
-print(top_5)
-print(7 * '--------')
+steamGraph = top.drop(['e_EventDate', 'e_TheatreCode', 'e_TheatreId',
+                       't_TheatreId', 't_TheatreCode', 't_TheatreName', 'p_PerformanceId',
+                       'p_EventId', 'p_PerformanceOrder', 'p_PType', 'p_PerformanceTitle', 'c_PerformerClean', 'c_CastId', 'c_PerformanceId', 'c_Role',
+                       'c_Performer', 'c_RoleClean'], axis=1)
+group = steamGraph.groupby(['e_Year', 'p_PerfTitleClean'])['e_EventId'].nunique()
+group = group.reset_index()
+group.to_csv('steamGraph.csv', index=False)
