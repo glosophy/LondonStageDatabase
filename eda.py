@@ -81,10 +81,12 @@ for i in df['p_PerfTitleClean']:
     if 'Hamlet' in i:
         hamlet.append(i)
 
+hamlet_unique = set(hamlet)  # get unique values of set
 
-df['p_PerfTitleClean'] = df['p_PerfTitleClean'].replace(regex=hamlet[1:], value=hamlet[0], inplace=True)
+for i in hamlet_unique:
+    df['p_PerfTitleClean'] = df['p_PerfTitleClean'].replace(regex=i, value='Hamlet')
 
-# filter by top 10 plays
+# filter by top 5 plays
 df_unique = df.groupby('p_PerfTitleClean')['e_EventId'].nunique()
 
 df_unique = df_unique.reset_index()
@@ -92,5 +94,17 @@ df_unique = df_unique.sort_values(by=['e_EventId'], ascending=False)
 print(df_unique)
 print(7 * '--------')
 
+top_5 = df_unique['p_PerfTitleClean'][:5].to_list()
+print('Top 5 plays:')
+print(top_5)
+print(7 * '--------')
 
 df_unique.to_csv('unique_plays.csv', index=False)
+
+# filter new df by plays to analyze and drop unnecessary columns
+df = df.drop(['e_Season', 'e_Volume', 'e_Hathi', 'e_CommentC', 'e_Phase1', 'e_Phase2',
+              'e_CommentCClean', 'e_BookPDF', 't_Volume', 'p_CommentP',
+              'p_CastAsListed', 'p_DetailedComment', 'p_WorkId', 'p_CommentPClean'], axis=1)
+
+df_clean = df[df['p_PerfTitleClean'].isin(top_5)]
+df_clean.to_csv('top_5.csv', index=False)
