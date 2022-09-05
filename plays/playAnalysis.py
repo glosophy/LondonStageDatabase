@@ -21,3 +21,17 @@ for i in range(len(dfs)):
     time = time.reset_index()
     time.to_csv('{}_overTime.csv'.format(str(plays[i]).replace(' ', '')), index=False)
 
+
+# get performers count for alluvial diagram
+# filter by top 5 plays
+top_performer = top.groupby('p_PerfTitleClean')['e_EventId'].nunique()
+
+df_unique = df_unique.reset_index()
+df_unique = df_unique.sort_values(by=['e_EventId'], ascending=False)
+print(df_unique)
+print(7 * '--------')
+
+top_5 = df_unique['p_PerfTitleClean'][:5].to_list()
+print('Top 5 plays:')
+print(top_5)
+print(7 * '--------')

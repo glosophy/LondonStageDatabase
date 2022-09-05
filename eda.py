@@ -108,3 +108,52 @@ df = df.drop(['e_Season', 'e_Volume', 'e_Hathi', 'e_CommentC', 'e_Phase1', 'e_Ph
 
 df_clean = df[df['p_PerfTitleClean'].isin(top_5)]
 df_clean.to_csv('top_5.csv', index=False)
+
+# clean performers names for top 5 count
+dunstall = []
+anderson = []
+bennet = []
+holtom = []
+green = []
+allen = []
+clive = []
+baker = []
+
+performers = [dunstall, anderson, bennet, holtom, green, allen, clive, baker]
+performers_name = ['Dunstall', 'Anderson', 'Bennet', 'Holtom', 'Green', 'Allen', 'Clive', 'Baker']
+
+for i in df_clean['c_Performer']:
+    for j in range(len(performers)):
+        if performers_name[j] in i:
+            performers[j].append(i)
+
+dunstall_clean = []
+
+for i in range(len(dunstall)):
+    if 'Mrs' not in dunstall[i]:
+        dunstall_clean.append(dunstall[i])
+
+performers = [dunstall_clean, anderson, bennet, holtom, green, allen, clive, baker]
+performers_clean = []
+for i in performers:
+    performers_clean.append(set(i))
+
+
+for i in range(len(performers_clean)):
+    for j in performers_clean[i]:
+        df_clean['c_Performer'] = df_clean['c_Performer'].replace(regex=j, value=performers_name[i])
+
+# get the top 5 performers from top 5 plays
+df_performers = df_clean.groupby(['c_Performer', 'p_PerfTitleClean'])['p_PerfTitleClean'].count()
+print(df_performers, '\n', 7 * '--------')
+df_performers.to_csv('top_performers.csv')
+
+df_theatres = df_clean.groupby('t_TheatreName')['e_EventId'].nunique()
+df_theatres = df_theatres.reset_index()
+df_theatres = df_theatres.sort_values(by=['e_EventId'], ascending=False)
+print(df_theatres, '\n', 7 * '--------')
+
+# get the top 5 theatres from top 5 plays
+df_theatres_play = df_clean.groupby(['t_TheatreName', 'p_PerfTitleClean'])['e_EventId'].nunique()
+print(df_theatres_play, '\n', 7 * '--------')
+df_theatres_play.to_csv('top_theatres.csv')
