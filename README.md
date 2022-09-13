@@ -1,10 +1,10 @@
-# London Stage Database | Data is Plural Challenge by the DVS
+# London Stage Database | Data is Plural Challenge
 
 ## :octocat: Repo Content
 This repo includes:
 * `eda.py`: an exploratory data analysis to understand the structure and basic info of the dataset
 * `/plays`: folder with more in-depth analysis on plays and top performers
-* `read_data.py`: script for data analysis
+* `/images`: folder with images
 
 
 ## :newspaper: Publication
@@ -16,6 +16,14 @@ This artwork is a visual analysis of the [London Stage Database](https://londons
 
 
 ## :bar_chart: Data Visualization
-Here are some preview images of the dataviz process.  
+Here are some preview images of the dataviz process.
 
-![Poster I](scripts/processingPosters/lilaWolken/lilaWolken-05.png)
+First sketch:
+![First sketch](images/draft.jpg)
+
+
+Final dataviz:
+![Final dataviz](images/London-Performances.png)
+
+The process as a `.gif`:
+![gif Process](images/ezgif.com-gif-maker.gif)
